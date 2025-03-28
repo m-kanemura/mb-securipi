@@ -13,13 +13,8 @@
 # - multi-thread I/O operations to reduce lag DONE
 # - adjust video capture length after motion detection DONE
 # - consider ignoring any motion made within first 1 minute (setup of camera may cause motion) DONE
-
-"""Fixes I need to make after testing"""
 # - configure raspberry pi and transfer code onto it
 # - consider configuring program to run automatically on startup (after turning the power on for the raspberry pi)
-
-"""Things I may want to consider"""
-
 
 
 import os
@@ -36,8 +31,8 @@ from clean_old_files import cleanup_old_videos
 from dotenv import load_dotenv
 
 # adjust depending on how long you want the camera to wait before 
-# starting capture after starting program (in seconds)
-STANDBY_TIME = 60
+# starting capture after starting program (in frames)
+STANDBY_TIME = 840 # = 14fps * 60secs
 
 # Load environment variables from .env file
 load_dotenv()
@@ -81,12 +76,6 @@ def send_email_async(email_receivers, time_detected):
 
 # Main loop
 while True:
-
-    # waits STANDBY_TIME (seconds) to start camera to prevent false positives 
-    # (ie. time after stating camera and leaving room - unnecessary to capture)
-    if camera_timer == 0:
-        time.sleep(STANDBY_TIME)
-
     success, frame = video_cap.read()
     if not success:
         print("!!!error: could not read from camera!!!")
@@ -121,6 +110,16 @@ while True:
         cv.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
     cv.imshow("Security Camera", frame)
+
+    # waits STANDBY_TIME (frames) to start camera to prevent false positives 
+    # (ie. time after stating camera and leaving room - unnecessary to capture)
+    if camera_timer < STANDBY_TIME:
+        # exit if any key is pressed
+        if cv.waitKey(1) & 0xFF != 255:
+            break
+        time.sleep(0.05)
+        camera_timer += 1
+        continue
 
     if video_timer > 0 and motion_detected == False:
         no_motion_grace += 1
