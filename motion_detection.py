@@ -1,22 +1,5 @@
 """ credit --- https://www.youtube.com/watch?v=T-7OSD5a-88 """
 
-#CONTINUE working on:
-# - adjust motion capture sensitivity (watch video) DONE
-# - recapture static frame after a period of time (for room brightness adjustment) DONE
-# - consider using date time??? instead of started_count DONE
-# - consider sending email using email when motion is detected. DONE
-# - have to make a google account DONE
-# - Save video to google drive (use google api)? DONE
-# - Send email to multiple people DONE
-# - Save email_receivers as .env DONE
-# - delete video files after drive upload - use function from clean_old_files - make sure function runs once a day DONE
-# - multi-thread I/O operations to reduce lag DONE
-# - adjust video capture length after motion detection DONE
-# - consider ignoring any motion made within first 1 minute (setup of camera may cause motion) DONE
-# - configure raspberry pi and transfer code onto it
-# - consider configuring program to run automatically on startup (after turning the power on for the raspberry pi)
-
-
 import os
 os.environ["OPENCV_VIDEOIO_MSMF_ENABLE_HW_TRANSFORMS"] = "0"
 

@@ -2,3 +2,5 @@
 __pycache__
 legacy_files
 service_account.json
+devnotes.txt
+venv
